@@ -1,19 +1,96 @@
 /* Lead Magnet Styling */
-.lead-box { margin-top: 24px; padding: 20px; background: #fff; border: 1px solid #cbd5e1; border-radius: 14px; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
-.lead-box h3 { font-size: 1.15rem; color: #0f172a; margin-bottom: 6px; font-weight: 700; }
-.lead-box p { font-size: 0.9rem; color: #64748b; margin-bottom: 16px; }
-.lead-form { display: flex; gap: 8px; max-width: 440px; margin: 0 auto; flex-wrap: wrap; }
-.lead-form input[type="email"] { flex: 1; min-width: 220px; background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; padding: 10px 14px; font-size: 0.95rem; font-weight: normal; }
-.lead-btn { background: #4f46e5; color: #ffffff; border: none; padding: 10px 20px; border-radius: 8px; font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: background 0.2s; }
-.lead-btn:hover { background: #4338ca; }
-.lead-btn:disabled { background: #94a3b8; cursor: not-allowed; }
-.lead-success { display: none; font-size: 0.9rem; color: #16a34a; margin-top: 12px; font-weight: 600; }
+.lead-box { 
+  margin-top: 24px; 
+  padding: 24px; 
+  background: #ffffff; 
+  border: 1px solid #cbd5e1; 
+  border-radius: 14px; 
+  text-align: center; 
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04); 
+}
+.lead-box h3 { 
+  font-size: 1.15rem; 
+  color: #0f172a; 
+  margin-bottom: 6px; 
+  font-weight: 700; 
+}
+.lead-box p { 
+  font-size: 0.9rem; 
+  color: #64748b; 
+  margin-bottom: 16px; 
+}
+.lead-form { 
+  display: flex; 
+  gap: 10px; 
+  max-width: 440px; 
+  margin: 0 auto; 
+  flex-wrap: wrap; 
+}
+.lead-form input[type="email"] { 
+  flex: 1; 
+  min-width: 220px; 
+  background: #f8fafc; 
+  border: 1px solid #cbd5e1; 
+  border-radius: 8px; 
+  padding: 11px 14px; 
+  font-size: 0.95rem; 
+  font-weight: normal; 
+}
+.lead-btn { 
+  background: #4f46e5; 
+  color: #ffffff; 
+  border: none; 
+  padding: 11px 22px; 
+  border-radius: 8px; 
+  font-size: 0.95rem; 
+  font-weight: 600; 
+  cursor: pointer; 
+  transition: background 0.2s; 
+}
+.lead-btn:hover { 
+  background: #4338ca; 
+}
+.lead-btn:disabled { 
+  background: #94a3b8; 
+  cursor: not-allowed; 
+}
+.lead-success { 
+  display: none; 
+  font-size: 0.9rem; 
+  color: #16a34a; 
+  margin-top: 14px; 
+  font-weight: 600; 
+}
 
-article { margin-top: 24px; background: #fff; border: 1px solid #e2e8f0; border-radius: 14px; padding: 24px; line-height: 1.6; }
-article h2 { font-size: 1.25rem; font-weight: 700; margin-bottom: 10px; }
-article p, article li { font-size: 0.9rem; color: #475569; }
-article ul { margin-left: 20px; margin-top: 8px; }
-footer { background: #fff; border-top: 1px solid #e2e8f0; padding: 16px; font-size: 0.75rem; color: #64748b; text-align: center; }
+article { 
+  margin-top: 24px; 
+  background: #fff; 
+  border: 1px solid #e2e8f0; 
+  border-radius: 14px; 
+  padding: 24px; 
+  line-height: 1.6; 
+}
+article h2 { 
+  font-size: 1.25rem; 
+  font-weight: 700; 
+  margin-bottom: 10px; 
+}
+article p, article li { 
+  font-size: 0.9rem; 
+  color: #475569; 
+}
+article ul { 
+  margin-left: 20px; 
+  margin-top: 8px; 
+}
+footer { 
+  background: #fff; 
+  border-top: 1px solid #e2e8f0; 
+  padding: 16px; 
+  font-size: 0.75rem; 
+  color: #64748b; 
+  text-align: center; 
+}
 
 
 <div class="calc-card">
@@ -35,6 +112,7 @@ footer { background: #fff; border-top: 1px solid #e2e8f0; padding: 16px; font-si
       <input type="number" id="shipCost" value="3.80" step="0.5">
     </div>
   </div>
+
   <div class="results-box">
     <div>
       <div class="line-item"><span>Customer Total:</span><strong id="rGross">$29.99</strong></div>
