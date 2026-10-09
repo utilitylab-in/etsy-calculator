@@ -1,58 +1,197 @@
-function doGet(e) {
-  return handleData(e);
-}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Etsy Profit & Fee Calculator (USA 2026)</title>
+  <meta name="description" content="Calculate Etsy seller fees, margins, and net profit for US orders.">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    body { background: #f8fafc; color: #1e293b; display: flex; flex-direction: column; min-height: 100vh; }
+    header { background: #fff; border-bottom: 1px solid #e2e8f0; padding: 14px 20px; }
+    .header-wrap { max-width: 850px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+    .brand { font-weight: 800; font-size: 1.25rem; color: #4f46e5; }
+    .badge { background: #eef2ff; color: #4338ca; font-size: 0.75rem; font-weight: 600; padding: 4px 10px; border-radius: 999px; }
+    main { max-width: 850px; margin: 0 auto; padding: 30px 16px; flex: 1; width: 100%; }
+    .hero { text-align: center; margin-bottom: 24px; }
+    .hero h1 { font-size: 1.8rem; font-weight: 800; color: #0f172a; }
+    .hero p { color: #64748b; font-size: 0.95rem; margin-top: 6px; }
+    .calc-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 14px; display: grid; grid-template-columns: 1fr 1fr; gap: 24px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+    @media (max-width: 640px) { .calc-card { grid-template-columns: 1fr; } }
+    .form-group { margin-bottom: 14px; }
+    label { display: block; font-size: 0.75rem; font-weight: 700; color: #475569; text-transform: uppercase; margin-bottom: 5px; }
+    input { width: 100%; background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; padding: 10px 12px; font-size: 1rem; font-weight: 600; color: #0f172a; outline: none; }
+    input:focus { border-color: #4f46e5; background: #fff; }
+    .results-box { background: #f1f5f9; border-radius: 12px; padding: 20px; display: flex; flex-direction: column; justify-content: space-between; }
+    .line-item { display: flex; justify-content: space-between; font-size: 0.88rem; margin-bottom: 8px; color: #334155; }
+    .line-item.sub { font-size: 0.8rem; color: #64748b; padding-left: 8px; }
+    .line-item.red { color: #e11d48; font-weight: 600; }
+    .divider { border-top: 1px solid #cbd5e1; margin: 10px 0; }
+    .profit-highlight { background: #4f46e5; color: #fff; border-radius: 10px; padding: 16px; margin-top: 16px; }
+    .profit-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.9; }
+    .profit-val { font-size: 1.8rem; font-weight: 800; margin-top: 2px; }
+    .profit-sub { font-size: 0.8rem; opacity: 0.9; margin-top: 4px; }
+    
+    .lead-box { margin-top: 24px; padding: 20px; background: #fff; border: 1px solid #cbd5e1; border-radius: 14px; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+    .lead-box h3 { font-size: 1.15rem; color: #0f172a; margin-bottom: 6px; font-weight: 700; }
+    .lead-box p { font-size: 0.9rem; color: #64748b; margin-bottom: 16px; }
+    .lead-form { display: flex; gap: 8px; max-width: 440px; margin: 0 auto; flex-wrap: wrap; }
+    .lead-form input[type="email"] { flex: 1; min-width: 220px; background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; padding: 10px 14px; font-size: 0.95rem; font-weight: normal; }
+    .lead-btn { background: #4f46e5; color: #ffffff; border: none; padding: 10px 20px; border-radius: 8px; font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: background 0.2s; }
+    .lead-btn:hover { background: #4338ca; }
+    .lead-btn:disabled { background: #94a3b8; cursor: not-allowed; }
+    .lead-success { display: none; font-size: 0.9rem; color: #16a34a; margin-top: 12px; font-weight: 600; }
 
-function doPost(e) {
-  return handleData(e);
-}
+    article { margin-top: 24px; background: #fff; border: 1px solid #e2e8f0; border-radius: 14px; padding: 24px; line-height: 1.6; }
+    article h2 { font-size: 1.25rem; font-weight: 700; margin-bottom: 10px; }
+    article p, article li { font-size: 0.9rem; color: #475569; }
+    article ul { margin-left: 20px; margin-top: 8px; }
+    footer { background: #fff; border-top: 1px solid #e2e8f0; padding: 16px; font-size: 0.75rem; color: #64748b; text-align: center; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-wrap">
+      <div class="brand">CraftMargin</div>
+      <div class="badge">USA 2026 Engine</div>
+    </div>
+  </header>
+  <main>
+    <div class="hero">
+      <h1>Etsy Seller Profit & Fee Calculator</h1>
+      <p>Instant breakdown of order revenue, platform fees, and net take-home profit.</p>
+    </div>
+    
+    <div class="calc-card">
+      <div>
+        <div class="form-group">
+          <label>Item Sale Price ($)</label>
+          <input type="number" id="sale" value="25.00" step="0.5">
+        </div>
+        <div class="form-group">
+          <label>Shipping Paid By Buyer ($)</label>
+          <input type="number" id="shipBuyer" value="4.99" step="0.5">
+        </div>
+        <div class="form-group">
+          <label>Item Production / Material Cost ($)</label>
+          <input type="number" id="itemCost" value="6.50" step="0.5">
+        </div>
+        <div class="form-group">
+          <label>Actual Shipping Label & Box Cost ($)</label>
+          <input type="number" id="shipCost" value="3.80" step="0.5">
+        </div>
+      </div>
+      <div class="results-box">
+        <div>
+          <div class="line-item"><span>Customer Total:</span><strong id="rGross">$29.99</strong></div>
+          <div class="divider"></div>
+          <div class="line-item sub"><span>Listing Fee:</span><span id="rListing">$0.20</span></div>
+          <div class="line-item sub"><span>Transaction Fee (6.5%):</span><span id="rTrans">$1.95</span></div>
+          <div class="line-item sub"><span>Processing (3% + $0.25):</span><span id="rProc">$1.15</span></div>
+          <div class="divider"></div>
+          <div class="line-item red"><span>Total Etsy Fees:</span><span id="rTotalFees">-$3.30</span></div>
+          <div class="line-item red"><span>Production & Shipping:</span><span id="rTotalCosts">-$10.30</span></div>
+        </div>
+        <div class="profit-highlight">
+          <div class="profit-label">Net Profit</div>
+          <div class="profit-val" id="rNet">$16.39</div>
+          <div class="profit-sub">Net Margin: <strong id="rMargin">54.65%</strong></div>
+        </div>
+      </div>
+    </div>
 
-function handleData(e) {
-  var lock = LockService.getScriptLock();
-  lock.tryLock(10000);
+    <!-- Lead Capture Magnet Section -->
+    <div class="lead-box">
+      <h3>📊 Free Etsy 2026 Pricing & Profit Sheet</h3>
+      <p>Track bulk listings, calculate ad breakeven, and forecast your monthly profit in one clean spreadsheet.</p>
+      <form id="leadForm" class="lead-form" onsubmit="handleLeadSubmit(event)">
+        <input 
+          type="email" 
+          id="leadEmail" 
+          placeholder="Enter your email" 
+          required 
+        />
+        <button type="submit" class="lead-btn">Get Free Sheet</button>
+      </form>
+      <p id="leadSuccess" class="lead-success">✓ Link sent! Check your inbox for the spreadsheet access.</p>
+    </div>
 
-  try {
-    var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-    var userEmail = "";
+    <article>
+      <h2>Understanding 2026 US Etsy Seller Deductions</h2>
+      <p>Etsy collects three primary fees on each completed transaction:</p>
+      <ul>
+        <li><strong>Listing Fee:</strong> $0.20 per item listing for four months or until sold.</li>
+        <li><strong>Transaction Fee:</strong> 6.5% of the total amount charged to the buyer (item + shipping).</li>
+        <li><strong>Payment Processing:</strong> 3% plus $0.25 flat charge per transaction in the United States.</li>
+      </ul>
+    </article>
+  </main>
+  <footer>
+    &copy; 2026 CraftMargin. Independent seller calculator tool. Not affiliated with Etsy, Inc.
+  </footer>
 
-    if (e.parameter && e.parameter.email) {
-      userEmail = e.parameter.email;
-    } else if (e.postData && e.postData.contents) {
-      try {
-        var parsed = JSON.parse(e.postData.contents);
-        userEmail = parsed.email || parsed;
-      } catch (err) {
-        userEmail = e.postData.contents;
-      }
+  <script>
+    const ids = ['sale', 'shipBuyer', 'itemCost', 'shipCost'];
+    function recalc() {
+      const s = parseFloat(document.getElementById('sale').value) || 0;
+      const sb = parseFloat(document.getElementById('shipBuyer').value) || 0;
+      const c = parseFloat(document.getElementById('itemCost').value) || 0;
+      const sc = parseFloat(document.getElementById('shipCost').value) || 0;
+      const gross = s + sb;
+      const listing = 0.20;
+      const trans = gross * 0.065;
+      const proc = (gross * 0.03) + 0.25;
+      const fees = listing + trans + proc;
+      const costs = c + sc;
+      const net = gross - fees - costs;
+      const margin = gross > 0 ? ((net / gross) * 100).toFixed(2) : 0;
+      document.getElementById('rGross').innerText = '$' + gross.toFixed(2);
+      document.getElementById('rListing').innerText = '$' + listing.toFixed(2);
+      document.getElementById('rTrans').innerText = '$' + trans.toFixed(2);
+      document.getElementById('rProc').innerText = '$' + proc.toFixed(2);
+      document.getElementById('rTotalFees').innerText = '-$' + fees.toFixed(2);
+      document.getElementById('rTotalCosts').innerText = '-$' + costs.toFixed(2);
+      document.getElementById('rNet').innerText = '$' + net.toFixed(2);
+      document.getElementById('rMargin').innerText = margin + '%';
     }
+    ids.forEach(id => document.getElementById(id).addEventListener('input', recalc));
+    recalc();
 
-    userEmail = ("" + userEmail).trim();
+    // Fresh Webhook Endpoint
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwf4_D2AxM-SHO9ZwxrRFC8G0mldF7mDHSu_3DuRXRRnrqVJZatFt4Gdc6d0SZyI5gDug/exec';
 
-    if (userEmail && userEmail.indexOf("@") !== -1) {
-      var timestamp = new Date();
-      // 1. Google Sheet mein row save karein
-      sheet.appendRow([timestamp, userEmail]);
+    function handleLeadSubmit(e) {
+      e.preventDefault();
+      const emailInput = document.getElementById('leadEmail');
+      const submitBtn = document.querySelector('.lead-btn');
+      const successMsg = document.getElementById('leadSuccess');
+      const email = emailInput.value.trim();
 
-      // 2. User ko instant welcome email bhejein
-      var subject = "Your Free Etsy 2026 Pricing & Profit Sheet";
-      var body = "Hi there,\n\n" +
-                 "Thanks for using our Etsy Calculator! Here is your free spreadsheet template to track listings and profit:\n\n" +
-                 "https://docs.google.com/spreadsheets/d/YOUR_TEMPLATE_LINK_HERE/copy\n\n" +
-                 "Best regards,\nCraftMargin Team";
+      if (!email) return;
 
-      MailApp.sendEmail(userEmail, subject, body, {
-        name: "CraftMargin Team"
+      submitBtn.innerText = 'Sending...';
+      submitBtn.disabled = true;
+
+      // Clean GET request bypassing browser CORS restrictions
+      const requestUrl = SCRIPT_URL + '?email=' + encodeURIComponent(email);
+
+      fetch(requestUrl, {
+        method: 'GET',
+        mode: 'no-cors'
+      })
+      .then(() => {
+        emailInput.value = '';
+        emailInput.disabled = true;
+        submitBtn.style.display = 'none';
+        successMsg.style.display = 'block';
+      })
+      .catch((err) => {
+        console.error(err);
+        submitBtn.innerText = 'Get Free Sheet';
+        submitBtn.disabled = false;
+        alert('Something went wrong. Please try again.');
       });
     }
-
-    return ContentService
-      .createTextOutput(JSON.stringify({ result: "success", email: userEmail }))
-      .setMimeType(ContentService.MimeType.JSON);
-
-  } catch (error) {
-    return ContentService
-      .createTextOutput(JSON.stringify({ result: "error", message: error.toString() }))
-      .setMimeType(ContentService.MimeType.JSON);
-  } finally {
-    lock.releaseLock();
-  }
-}
+  </script>
+</body>
+</html>
