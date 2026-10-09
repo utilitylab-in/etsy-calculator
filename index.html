@@ -172,11 +172,12 @@
       submitBtn.innerText = 'Sending...';
       submitBtn.disabled = true;
 
-      fetch(SCRIPT_URL, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: email })
+      // GET parameter bypasses CORS and preflight blocks cleanly
+      const requestUrl = SCRIPT_URL + '?email=' + encodeURIComponent(email);
+
+      fetch(requestUrl, {
+        method: 'GET',
+        mode: 'no-cors'
       })
       .then(() => {
         emailInput.value = '';
