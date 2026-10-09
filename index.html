@@ -157,8 +157,8 @@
     ids.forEach(id => document.getElementById(id).addEventListener('input', recalc));
     recalc();
 
-    // Google Sheets Webhook Lead Capture
-    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwHlnkPCiCg2hF_bZHpA7LmYsBy1bC2hxScR2UTN_ADvP2iScRKXk7-Aqw4-4ekXabb/exec';
+    // Google Apps Script Webhook
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyatpFMZLw6KmkBCtHY_KX_JrA6npzScWGNDKjASV89BZtFgl0qPKmsRLy4ewpGKRlK/exec';
 
     function handleLeadSubmit(e) {
       e.preventDefault();
